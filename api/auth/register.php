@@ -56,9 +56,7 @@ if ($stmt->execute()) {
     $newUserId = $stmt->insert_id;
     $token = getTokenToSendAPI($newUserId);
     $stmt->close();
-    respondOK([
-        "access_token" => $token
-    ], "Registration successful.");
+    respondOK([ ], "Registration successful.");
 } else {
     $stmt->close();
     respondBadRequest("Registration failed.");
