@@ -24,6 +24,21 @@ if ($result->num_rows == 0) {
 
 $user = $result->fetch_assoc();
 
+if (!password_verify($password, $user['password'])) {
+    $stmt->close();
+    respondBadRequest("Invalid login credentials.");
+}
+
+// If hash settings change in future, update to a new hash after successful login.
+if (password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
+    $newHash = password_hash($password, PASSWORD_DEFAULT);
+    $update = $connect->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $update->bind_param("si", $newHash, $user['id']);
+    $update->execute();
+    $update->close();
+}
+
 $token = getTokenToSendAPI($user['id']);
+$stmt->close();
 respondOK(["access_token" => $token], "Login successful.");
 ?>

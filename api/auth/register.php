@@ -32,30 +32,35 @@ elseif(!preg_match('/[A-Z]/', $password) ||
     respondBadRequest("Password must contain uppercase, lowercase and number.");
 }
 
+$passwordHash = password_hash($password, PASSWORD_DEFAULT);
+if ($passwordHash === false) {
+    respondBadRequest("Unable to process password.");
+}
+
 /*  CHECK DUPLICATE */
 $check = $connect->prepare("SELECT id FROM users WHERE email = ? OR username = ?");
 $check->bind_param("ss", $email, $username);
 $check->execute();
 
 if ($check->get_result()->num_rows > 0) {
+    $check->close();
     respondBadRequest("Account already exists.");
 }
+$check->close();
 
 $role   = "teacher";
 $stmt = $connect->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("ssss", $username, $email, $password, $role);
+$stmt->bind_param("ssss", $username, $email, $passwordHash, $role);
 
 if ($stmt->execute()) {
-    
-respondOK([
-    "access_token" => $token
-], "Registration successful.");
-    
-}else{
+    $newUserId = $stmt->insert_id;
+    $token = getTokenToSendAPI($newUserId);
+    $stmt->close();
+    respondOK([
+        "access_token" => $token
+    ], "Registration successful.");
+} else {
+    $stmt->close();
     respondBadRequest("Registration failed.");
 }
-
-
-
-
 ?>
