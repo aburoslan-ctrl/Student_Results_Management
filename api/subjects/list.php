@@ -13,6 +13,7 @@ if (!isset($user_id) || input_is_invalid($user_id) || !is_numeric($user_id)) {
 }
 $user_id = (int)$user_id;
 
+
 // Prepare query
 $stmt = $connect->prepare("SELECT 
         s.id,
@@ -20,10 +21,8 @@ $stmt = $connect->prepare("SELECT
     FROM subjects s
     ORDER BY s.id DESC
 ");
-
 $stmt->execute();
 $result = $stmt->get_result();
-
 // Process results
 if ($result->num_rows > 0) {
 

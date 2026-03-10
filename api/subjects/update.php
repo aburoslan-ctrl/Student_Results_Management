@@ -18,6 +18,10 @@ if (!is_numeric($subject_id)) {
 
 if (input_is_invalid($subject_name)) {
     respondBadRequest("Subject name cannot be empty.");
+}elseif (strlen($subject_name) < 2 || strlen($subject_name) > 100) {
+    respondBadRequest("Subject name must be between 2 and 100 characters.");
+} elseif (!preg_match("/^[a-zA-Z0-9 ]+$/", $subject_name)) {
+    respondBadRequest("Subject name contains invalid characters.");
 }
 
 /* CHECK SUBJECT EXISTS */
@@ -29,13 +33,15 @@ if ($check->get_result()->num_rows == 0) {
     respondBadRequest("Subject not found.");
 }
 
-/* CHECK DUPLICATE NAME (EXCEPT CURRENT ID) */
+/* CHECK DUPLICATE NAME */
 $dup = $connect->prepare("SELECT id FROM subjects WHERE subject_name = ? AND id != ?");
 $dup->bind_param("si", $subject_name, $subject_id);
 $dup->execute();
 
 if ($dup->get_result()->num_rows > 0) {
     respondBadRequest("Another subject with this name already exists.");
+}elseif ($user->role !== 'admin') {
+    respondUnauthorized("You are not authorized to update this subject.");
 }
 
 /* UPDATE */

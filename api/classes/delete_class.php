@@ -23,6 +23,10 @@ $check->execute();
 if ($check->get_result()->num_rows == 0) {
     respondBadRequest("Class not found.");
 }
+//check if user is admin 
+if ($user->role !== 'admin') {
+    respondUnauthorized("You are not authorized to delete this class.");
+}
 
 /* CHECK IF STUDENTS BELONG TO THIS CLASS */
 $student_check = $connect->prepare("SELECT id FROM students WHERE class_id = ?");

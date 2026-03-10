@@ -6,7 +6,7 @@ include "../../head.php";
 $user = ValidateAPITokenSentIN();
 
 /* REQUIRED FIELD */
-if (!isset($_POST['class_name'])) {
+if (!isset($_POST['class_name']))  {
     respondBadRequest("Class name is required.");
 }
 

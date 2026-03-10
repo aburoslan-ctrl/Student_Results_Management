@@ -11,6 +11,14 @@ $password = cleanme($_POST['password']);
 
 if (input_is_invalid($email) || input_is_invalid($password)) {
     respondBadRequest("All fields required.");
+}elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    respondBadRequest("Invalid email format.");
+}elseif(strlen($password) < 6) {
+    respondBadRequest("Password must be at least 6 characters.");
+}elseif(!preg_match('/[A-Z]/', $password) ||
+    !preg_match('/[a-z]/', $password) ||
+    !preg_match('/[0-9]/', $password)) {
+    respondBadRequest("Password must contain uppercase, lowercase and number.");
 }
 
 $stmt = $connect->prepare("SELECT id, password FROM users WHERE email = ?");

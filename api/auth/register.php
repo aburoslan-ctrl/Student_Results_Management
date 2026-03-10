@@ -4,16 +4,17 @@ $cache  = "no-cache";
 include "../../head.php";
 
 
-if (!isset($_POST['username'], $_POST['email'], $_POST['password'])) {
+if (!isset($_POST['username'], $_POST['email'], $_POST['password'],$_POST['role'])) {
     respondBadRequest("All fields are required.");
 }
 
 $username = trim(cleanme($_POST['username']));
 $email    = trim(cleanme($_POST['email']));
 $password = trim(cleanme($_POST['password']));
+$role     = trim(cleanme($_POST['role']));
 
 /*  VALIDATION */
-if (empty($username) || empty($email) || empty($password)) {
+if (empty($username) || empty($email) || empty($password) || empty($role)) {
     respondBadRequest("All fields are required.");
 }
 
@@ -36,6 +37,11 @@ $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 if ($passwordHash === false) {
     respondBadRequest("Unable to process password.");
 }
+// role validation
+$allowed_roles = [ 'student', 'admin', 'teacher'];
+if (!in_array($role, $allowed_roles)) {
+    respondBadRequest("Invalid role.");
+}
 
 /*  CHECK DUPLICATE */
 $check = $connect->prepare("SELECT id FROM users WHERE email = ? OR username = ?");
@@ -48,7 +54,6 @@ if ($check->get_result()->num_rows > 0) {
 }
 $check->close();
 
-$role   = "teacher";
 $stmt = $connect->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
 $stmt->bind_param("ssss", $username, $email, $passwordHash, $role);
 
