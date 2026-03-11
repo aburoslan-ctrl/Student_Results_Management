@@ -24,9 +24,10 @@ if ($result->num_rows === 0) {
 }
 
 // Optional: Only admin can delete (if you have roles)
-if ($user->role !== 'admin') {
-    respondUnauthorized("You are not authorized to delete this teacher.");
-}
+// if ($user->role !== 'admin') {
+//     respondUnauthorized("You are not authorized to delete this teacher.");
+// }
+
 
 // Delete teacher
 $delete = $connect->prepare("DELETE FROM teachers WHERE id = ?");

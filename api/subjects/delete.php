@@ -33,9 +33,9 @@ if ($result_check->get_result()->num_rows > 0) {
     respondBadRequest("Cannot delete subject. Results already exist for it.");
 }
 // check if user is admin
-if ($user->role !== 'admin') {
-    respondUnauthorized("You are not authorized to delete this subject.");
-}
+// if ($user->role !== 'admin') {
+//     respondUnauthorized("You are not authorized to delete this subject.");
+// }
 
 
 /* DELETE */

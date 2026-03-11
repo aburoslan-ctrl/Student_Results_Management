@@ -24,13 +24,14 @@ if (!is_numeric($student_id) || !is_numeric($subject_id))  {respondBadRequest("I
 elseif (!is_numeric($ca1) || !is_numeric($ca2) || !is_numeric($exam)) {respondBadRequest("Scores must be numeric.");
 }elseif ($ca1 < 0 || $ca1 > 20 || $ca2 < 0 || $ca2 > 20 || $exam < 0 || $exam > 60) {
     respondBadRequest("Scores out of valid range.");
-}elseif (!in_array($term, ['First Term', 'Second Term', 'Third Term'])) {
+}elseif (!in_array($term, ['First', 'Second', 'Third'])) {
     respondBadRequest("Invalid term value.");
 }elseif ($student_id <= 0 || $subject_id <= 0) {
     respondBadRequest("IDs must be positive integers.");
-}elseif ($user->role !== 'admin' && $user->role !== 'teacher') {
-    respondUnauthorized("You are not authorized to add results.");
 }
+// }elseif ($user->role !== 'admin' && $user->role !== 'teacher') {
+//     respondUnauthorized("You are not authorized to add results.");
+// }
 
 // Calculate total
 $total = $ca1 + $ca2 + $exam;
@@ -49,7 +50,7 @@ else $grade = "F";
 
 
 //check duplicate result for same student, subject and term
-$check = $connect->prepare("SELECT id FROM results WHERE student_id = ? AND subject         _id = ? AND term = ?");
+$check = $connect->prepare("SELECT id FROM results WHERE student_id = ? AND subject_id = ? AND term = ?");
 $check->bind_param("iis", $student_id, $subject_id, $term);
 $check->execute();
 $check_result = $check->get_result();

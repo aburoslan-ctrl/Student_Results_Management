@@ -39,10 +39,10 @@ $dup->bind_param("si", $subject_name, $subject_id);
 $dup->execute();
 
 if ($dup->get_result()->num_rows > 0) {
-    respondBadRequest("Another subject with this name already exists.");
-}elseif ($user->role !== 'admin') {
-    respondUnauthorized("You are not authorized to update this subject.");
-}
+    respondBadRequest("Another subject with this name already exists.");}
+// }elseif ($user->role !== 'admin') {
+//     respondUnauthorized("You are not authorized to update this subject.");
+// }
 
 /* UPDATE */
 $stmt = $connect->prepare("UPDATE subjects SET subject_name = ? WHERE id = ?");

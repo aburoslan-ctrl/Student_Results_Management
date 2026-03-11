@@ -26,9 +26,9 @@ if ($result->num_rows === 0) {
 $current = $result->fetch_assoc();
 
 // Optional: Only admin can update
-if ($user->role !== 'admin') {
-    respondUnauthorized("You are not authorized to update this teacher.");
-}
+// if ($user->role !== 'admin') {
+//     respondUnauthorized("You are not authorized to update this teacher.");
+// }
 
 // Updateable fields
 $username = isset($_POST['username']) ? trim(cleanme($_POST['username'])) : $current['username'];

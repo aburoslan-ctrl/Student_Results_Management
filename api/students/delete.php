@@ -26,10 +26,10 @@ if ($result->num_rows == 0) {
     respondBadRequest("Student not found.");
 }
 // check if user is admin
-$user_id = $datasentin->usertoken;
-if ($user->role !== 'admin') {
-    respondUnauthorized("You are not authorized to delete this student.");
-}
+// $user_id = $datasentin->usertoken;
+// if ($user->role !== 'admin') {
+//     respondUnauthorized("You are not authorized to delete this student.");
+// }
 //. check if student has results
 $result_check = $connect->prepare("SELECT id FROM results WHERE student_id = ?");
 $result_check->bind_param("i", $student_id);
