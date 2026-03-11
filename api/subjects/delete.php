@@ -4,6 +4,7 @@ $cache  = "no-cache";
 include "../../head.php";
 
 $user = ValidateAPITokenSentIN();
+$user_id=$datasentin->usertoken;
 
 if (!isset($_POST['subject_id'])) {
     respondBadRequest("Subject ID is required.");

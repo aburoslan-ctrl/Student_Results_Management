@@ -4,6 +4,7 @@ $cache = "no-cache";
 include "../../head.php";
 
 $user = ValidateAPITokenSentIN();
+$user_id = $user->usertoken;
 
 // Validate required POST fields
 if (!isset($_POST['student_id'], $_POST['subject_id'], $_POST['term'], $_POST['ca_score1'], $_POST['ca_score2'], $_POST['exam_score'])) {
@@ -29,7 +30,7 @@ elseif (!is_numeric($ca1) || !is_numeric($ca2) || !is_numeric($exam)) {respondBa
 }elseif ($student_id <= 0 || $subject_id <= 0) {
     respondBadRequest("IDs must be positive integers.");
 }
-elseif ($user_id !== 'admin' && $user->role !== 'teacher') {
+elseif ($user_id !== 'admin' && $user_id !== 'teacher') {
      respondUnauthorized("You are not authorized to add results.");
  } 
 
