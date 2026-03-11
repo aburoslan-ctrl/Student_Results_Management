@@ -7,7 +7,7 @@ include "../../head.php";
 $user = ValidateAPITokenSentIN();
 
 // Check if student ID is provided
-if (!isset($_POST['student_id']) || !is_numeric($_POST['student_id'])) {
+if (!isset($_POST['student_id']) || !is_numeric($_POST['student_id']) || (int)$_POST['student_id'] <= 0) {
     respondBadRequest("Valid student ID is required.");
 }
 
@@ -24,9 +24,10 @@ if ($result->num_rows === 0) {
 }
 
 $current = $result->fetch_assoc();
+$role = $user->role;
 
 // Optional: Only admin or teacher can update (depending on your roles)
-if ($user->role !== 'admin' && $user->role !== 'teacher') {
+if ($role !== 'admin' && $role !== 'teacher') {
     respondUnauthorized("You are not authorized to update this student.");
 }
 

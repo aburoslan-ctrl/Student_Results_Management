@@ -258,6 +258,31 @@ use Firebase\JWT\Key;
                 respondUnauthorized();
             }
             $usertoken= $token->usertoken;
+            if (!is_numeric($usertoken) || (int)$usertoken <= 0) {
+                respondUnauthorized();
+            }
+
+            // Attach user data (role, email, username) to token object
+            global $connect;
+            $userStmt = $connect->prepare("SELECT id, username, email, role FROM users WHERE id = ?");
+            if ($userStmt === false) {
+                respondInternalError("Failed to prepare user lookup.");
+            }
+            $userId = (int)$usertoken;
+            $userStmt->bind_param("i", $userId);
+            $userStmt->execute();
+            $userResult = $userStmt->get_result();
+            if ($userResult->num_rows === 0) {
+                $userStmt->close();
+                respondUnauthorized();
+            }
+            $userRow = $userResult->fetch_assoc();
+            $userStmt->close();
+
+            $token->id = (int)$userRow['id'];
+            $token->username = $userRow['username'];
+            $token->email = $userRow['email'];
+            $token->role = $userRow['role'];
             // in 60 min 300 max API call
             // if(userHasCalledAPIToMaxLimit($usertoken, 300 ,  60)){
             //     respondTooManyRequest();
