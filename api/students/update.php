@@ -24,14 +24,11 @@ if ($result->num_rows === 0) {
 }
 
 $current = $result->fetch_assoc();
-$role =strtolower($user->role);
-echo $user->role;
-exit;
 
 // Optional: Only admin or teacher can update (depending on your roles)
-// if ($role !== 'admin' && $role !== 'teacher') {
-//     respondUnauthorized("You are not authorized to update this student.");
-// }
+if ($user_id !== 'admin' && $user_id !== 'teacher') {
+    respondUnauthorized("You are not authorized to update this student.");
+}
 
 
 // Fields that can be updated

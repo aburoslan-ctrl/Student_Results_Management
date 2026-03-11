@@ -5,7 +5,7 @@ include "../../head.php";
 
 // Validate API token
 $user = ValidateAPITokenSentIN();
-
+$user_id = $user->usertoken;
 // Check if teacher ID is provided
 if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
     respondBadRequest("Valid teacher ID is required.");
@@ -24,9 +24,9 @@ if ($result->num_rows === 0) {
 }
 
 // Optional: Only admin can delete (if you have roles)
-// if ($user->role !== 'admin') {
-//     respondUnauthorized("You are not authorized to delete this teacher.");
-// }
+if ($user_id !== 'admin') {
+    respondUnauthorized("You are not authorized to delete this teacher.");
+}
 
 
 // Delete teacher

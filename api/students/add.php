@@ -4,6 +4,7 @@ $cache = "no-cache";
 include "../../head.php";
 
 $user = ValidateAPITokenSentIN();
+$user_id = $user->usertoken;
 
 if (!isset($_POST['admission_no'], $_POST['first_name'], $_POST['last_name'], $_POST['gender'], $_POST['class_id'])) {
     respondBadRequest("All fields are required.");

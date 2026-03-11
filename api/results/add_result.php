@@ -29,9 +29,9 @@ elseif (!is_numeric($ca1) || !is_numeric($ca2) || !is_numeric($exam)) {respondBa
 }elseif ($student_id <= 0 || $subject_id <= 0) {
     respondBadRequest("IDs must be positive integers.");
 }
-// }elseif ($user->role !== 'admin' && $user->role !== 'teacher') {
-//     respondUnauthorized("You are not authorized to add results.");
-// }
+elseif ($user_id !== 'admin' && $user->role !== 'teacher') {
+     respondUnauthorized("You are not authorized to add results.");
+ } 
 
 // Calculate total
 $total = $ca1 + $ca2 + $exam;

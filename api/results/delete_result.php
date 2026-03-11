@@ -37,9 +37,9 @@ if ($check_result->num_rows === 0) {
 }
 
 // Optional: Only admin or teacher can delete
-// if (!in_array($user->role, ['admin', 'teacher'])) {
-//     respondUnauthorized("You are not authorized to delete this result.");
-// }
+if (!in_array($user_id, ['admin', 'teacher'])) {
+    respondUnauthorized("You are not authorized to delete this result.");
+}
 
 // Delete the result
 $delete = $connect->prepare("DELETE FROM results WHERE id = ?");
